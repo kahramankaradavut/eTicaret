@@ -1,16 +1,6 @@
 <?php
 
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | Blade File Tracer
-    |--------------------------------------------------------------------------
-    |
-    | Shows blade file path in front
-    |
-    */
-
-    'tracer' => false,
 
     /*
     |--------------------------------------------------------------------------
@@ -38,6 +28,9 @@ return [
     |
     */
 
-    'compiled' => realpath(storage_path('framework/views')),
+    'compiled' => env(
+        'VIEW_COMPILED_PATH',
+        realpath(storage_path('framework/views'))
+    ),
 
 ];
