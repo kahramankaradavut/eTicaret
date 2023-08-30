@@ -15,7 +15,7 @@ class SiteSettingSeeder extends Seeder
     {
        SiteSetting::create([
         'name'=>'adres',
-        'data'=>'Samsun Adres bilgilerim burada',
+        'data'=>'Kayseri Adres bilgilerim burada',
        ]);
 
 

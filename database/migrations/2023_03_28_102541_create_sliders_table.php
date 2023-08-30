@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('sliders', function (Blueprint $table) {
             $table->id();
-            $table->string('image');
-            $table->string('name');
+            $table->string('image')->nullable();
+            $table->string('name')->nullable();
             $table->text('content')->nullable();
             $table->string('link')->nullable();
             $table->enum('status',['0','1'])->default('0');

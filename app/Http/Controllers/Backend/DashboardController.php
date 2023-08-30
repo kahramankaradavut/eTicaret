@@ -13,7 +13,7 @@ class DashboardController extends Controller
     $mountTotalCount = Order::where('created_at', '>=', now()->subDays(30))->count();
 
 
-     $mountTotalPrice =Order::select(DB::raw('SUM(qty * price * (1 + kdv / 100)) as total_revenue'))
+     $mountTotalPrice =Order::select(DB::raw('SUM(qty * price ) as total_revenue'))
       ->where('created_at', '>=', now()->subDays(30))
     ->value('total_revenue');
 
@@ -21,7 +21,7 @@ class DashboardController extends Controller
 
     $TotalCount = Order::count();
 
-    $TotalPrice =Order::select(DB::raw('SUM(qty * price * (1 + kdv / 100)) as total_revenue'))
+    $TotalPrice =Order::select(DB::raw('SUM(qty * price ) as total_revenue'))
   ->value('total_revenue');
 
 

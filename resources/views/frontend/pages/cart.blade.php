@@ -40,7 +40,7 @@
                             <td class="product-name">
                                 <h2 class="h5 text-black">{{$cart['name'] ?? ''}}</h2>
                             </td>
-                            <td>{{$cart['price']}}</td>
+                            <td>{{$cart['price']}} ₺</td>
                             <td>
                                 <div class="input-group mb-3" style="max-width: 120px;">
                                     <div class="input-group-prepend">
@@ -52,6 +52,7 @@
                                     </div>
                                 </div>
                             </td>
+
                             @php
                                 $kdvOrani = $cart['kdv'] ?? 0;
                                 $fiyat = $cart['price'];

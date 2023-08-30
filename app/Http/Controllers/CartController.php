@@ -50,8 +50,14 @@ class CartController extends Controller
         }
         if (session()->get('coupon_code') && $totalPrice != 0) {
             $kupon = Coupon::where('name',session()->get('coupon_code'))->where('status','1')->first();
+            $kuponrate = $kupon->discount_rate ?? 0;
             $kuponprice = $kupon->price ?? 0;
+            if($kuponprice > 0){
             $newtotalPrice = $totalPrice - $kuponprice;
+            }
+            if($kuponrate > 0){
+            $newtotalPrice = $totalPrice - ($totalPrice * $kuponrate/100);
+            }
         }else {
             $newtotalPrice = $totalPrice;
         }
@@ -287,6 +293,7 @@ class CartController extends Controller
 
 
             $cart = session()->get('cart') ?? [];
+
             foreach ( $cart as $key => $item) {
                 Order::create([
                     'order_no'=> $invoce->order_no,
@@ -294,7 +301,7 @@ class CartController extends Controller
                     'name'=>$item['name'],
                     'price'=>$item['price'],
                     'qty'=>$item['qty'],
-                    'kdv'=>$item['kdv']
+
                 ]);
             }
 

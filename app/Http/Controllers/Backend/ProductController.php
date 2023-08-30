@@ -35,7 +35,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
 
-
+dd($request);
            $product = Product::create([
                 'name'=>$request->name,
                 'category_id'=>$request->category_id,
