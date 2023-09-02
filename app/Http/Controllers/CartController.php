@@ -43,9 +43,7 @@ class CartController extends Controller
         $cartItem = session()->get('cart') ?? [];
         $totalPrice = 0;
         foreach ($cartItem as $cart) {
-            $kdvOrani = $cart['kdv'] ?? 0;
-            $kdvtutar = ($cart['price'] * $cart['qty']) * ($kdvOrani / 100);
-            $toplamTutar = $cart['price'] * $cart['qty'] + $kdvtutar;
+            $toplamTutar = $cart['price'] * $cart['qty'];
             $totalPrice +=  $toplamTutar;
         }
         if (session()->get('coupon_code') && $totalPrice != 0) {
@@ -132,7 +130,6 @@ class CartController extends Controller
                     'name'=>$urun->name,
                     'price'=> $urun->price /  $kuponprice,
                     'qty'=>$qty,
-                    'kdv'=>$urun->kdv,
                     'size'=>$size,
                 ];
             }
@@ -168,10 +165,7 @@ class CartController extends Controller
             }else {
                 $price = $urun->price;
             }
-
-             $kdvOraniitem = $urun->kdv ?? 0;
-             $kdvtutaritem = ( $price * $qty) * ($kdvOraniitem / 100);
-            $itemtotal =  $price * $qty + $kdvtutaritem;
+            $itemtotal =  $price * $qty;
 
         }
 

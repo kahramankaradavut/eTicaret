@@ -5,7 +5,8 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
-use Database\Factories\ProductFactory;
+use Database\Seeders\PageSeoSeeder;
+
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,7 +28,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             AboutSeeder::class,
             SiteSettingSeeder::class,
-            ProductSeeder::class
+            ProductSeeder::class,
+            PageSeoSeeder::class
         ]);
 
         Product::factory(100)->create();

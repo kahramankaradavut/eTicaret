@@ -18,12 +18,9 @@ class Product extends Model
         'size',
         'color',
         'qty',
-        'kdv',
         'status',
         'content',
-        'title',
-        'description',
-        'keywords',
+
     ];
     public function category() {
       return  $this->hasOne(Category::class,'id','category_id');

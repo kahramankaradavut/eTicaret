@@ -197,7 +197,6 @@ tbody tr td {
                         <th>Ürün Adı</th>
                         <th>Adet</th>
                         <th>fİYAT</th>
-                        <th>kdv</th>
                         <th>Toplam Tutar</th>
                       </tr>
                     </thead>
@@ -208,18 +207,14 @@ tbody tr td {
                         @if (!empty($invoice->orders))
                             @foreach ($invoice->orders as $item)
                             @php
-                            $kdvOrani = $item['kdv'] ?? 0;
                             $fiyat = $item['price'];
                             $adet = $item['qty'];
-
-                            $kdvtutar = ($fiyat * $adet) * ($kdvOrani / 100);
-                            $toplamTutar = $fiyat * $adet + $kdvtutar;
+                            $toplamTutar = $fiyat * $adet;
                         @endphp
                                 <tr>
                                     <td>{{$item['name']}}</td>
                                     <td>{{$item['qty']}}</td>
                                     <td>{{$item['price']}}</td>
-                                    <td>{{$item['kdv']}}</td>
                                     <td>{{$toplamTutar}}</td>
                                     @php
                                         $alltotal += $toplamTutar

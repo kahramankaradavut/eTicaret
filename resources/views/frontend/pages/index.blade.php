@@ -1,8 +1,8 @@
 @extends('frontend.layout.layout')
 
 @section('content')
-@dd($slider)
-    <div class="site-blocks-cover" style="background-image: url({{asset($slider->image ?? '')}});" data-aos="fade">
+
+    <div class="site-blocks-cover" style="background-image: {{asset($slider->image ?? '')}};" data-aos="fade">
       <div class="container">
         <div class="row align-items-start align-items-md-center justify-content-end">
           <div class="col-md-5 text-center text-md-left pt-5 pt-md-0">
@@ -53,31 +53,7 @@
       </div>
     </div>
 
-    <div class="site-section site-blocks-2">
-      <div class="container">
-        <div class="row">
-            @if (!empty($categories) && $categories->count() > 0)
-            @foreach ($categories->where('cat_ust',null) as $category)
-            <div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0" data-aos="fade" data-aos-delay="">
-                <a class="block-2-item" href="{{url($category->slug)}}">
-                  <figure class="image">
-
-                       @php
-                      $imagescat = collect($category->images->data ?? '');
-                      @endphp
-                      <img src="{{asset($imagescat->sortByDesc('vitrin')->first()['image'] ?? 'img/resimyok.png')}}"  alt="{{$imagescat->sortByDesc('vitrin')->first()['alt'] ?? ''}}" class="img-fluid" ></img>
-
-                  </figure>
-                  <div class="text">
-                    <h3>{{$category->name}}</h3>
-                  </div>
-                </a>
-              </div>
-            @endforeach
-            @endif
-        </div>
-      </div>
-    </div>
+    
 
     <div class="site-section block-3 site-blocks-2 bg-light">
       <div class="container">
@@ -118,23 +94,5 @@
       </div>
     </div>
 
-    <div class="site-section block-8">
-      <div class="container">
-        <div class="row justify-content-center  mb-5">
-          <div class="col-md-7 site-section-heading text-center pt-4">
-            <h2>Kampanya!</h2>
-          </div>
-        </div>
-        <div class="row align-items-center">
-          <div class="col-md-12 col-lg-7 mb-5">
-            <a href="#"><img src="{{$settings['kampanya_image'] ?? ''}}" alt="Image placeholder" class="img-fluid rounded"></a>
-          </div>
-          <div class="col-md-12 col-lg-5 text-center pl-md-5">
-            <h4>{{$settings['kampanya_title'] ?? ''}}</h4>
-            <p>{{$settings['kampanya_text'] ?? ''}}</p>
-            <p><a href="{{route('tumurunlerindirim')}}" class="btn btn-primary btn-sm">İndirideki Ürünler</a></p>
-          </div>
-        </div>
-      </div>
-    </div>
+  
     @endsection

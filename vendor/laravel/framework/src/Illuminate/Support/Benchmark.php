@@ -64,6 +64,6 @@ class Benchmark
             ->map(fn ($average) => number_format($average, 3).'ms')
             ->when($benchmarkables instanceof Closure, fn ($c) => $c->first(), fn ($c) => $c->all());
 
-        dd($result);
+
     }
 }

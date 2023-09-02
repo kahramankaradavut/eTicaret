@@ -153,6 +153,7 @@ class PageController extends Controller
                     'link'=> route($category->slug.'urunler'),
                     'name' => $category->name
                 ];
+                
             }
 
 

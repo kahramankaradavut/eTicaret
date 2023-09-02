@@ -54,12 +54,9 @@
                             </td>
 
                             @php
-                                $kdvOrani = $cart['kdv'] ?? 0;
                                 $fiyat = $cart['price'];
                                 $adet = $cart['qty'];
-
-                                $kdvtutar = ($fiyat * $adet) * ($kdvOrani / 100);
-                                $toplamTutar = $fiyat * $adet + $kdvtutar;
+                                $toplamTutar = $fiyat * $adet;
                             @endphp
                             <td class="itemTotal">{{$toplamTutar}} ₺</td>
                             <td>

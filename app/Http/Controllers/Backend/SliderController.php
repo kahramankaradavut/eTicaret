@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Backend;
 use ImageResize;
 use App\Models\Slider;
 use App\Models\ImageMedia;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SLiderRequest;
@@ -17,8 +16,9 @@ class SliderController extends Controller
      */
     public function index()
     {
-         $sliders = Slider::with('images')->get();
-        return view('backend.pages.slider.index',compact('sliders'));
+        $sliders = Slider::with('images')->get();
+
+        return view('backend.pages.slider.index', compact('sliders'));
     }
 
     /**
@@ -34,22 +34,19 @@ class SliderController extends Controller
      */
     public function store(SLiderRequest $request)
     {
+        $slider = Slider::create([
+            'image' => $request->image,
+            'name' => $request->name,
+            'link' => $request->link,
+            'content' => $request->content,
+            'status' => $request->status,
+        ]);
 
+        if ($request->hasFile('image')) {
+            $this->fileSave('Slider', 'slider', $request, $slider);
+        }
 
-
-          $slider =  Slider::create([
-                'name'=>$request->name,
-                'link'=>$request->link,
-                'content'=>$request->content,
-                'status'=>$request->status,
-            ]);
-
-            if ($request->hasFile('image')) {
-                $this->fileSave('Slider', 'slider', $request, $slider);
-            }
-
-
-            return back()->withSuccess('Başarıyla Oluşturuldu!');
+        return back()->withSuccess('Başarıyla Oluşturuldu!');
     }
 
     /**
@@ -65,8 +62,10 @@ class SliderController extends Controller
      */
     public function edit(string $id)
     {
-         $slider = Slider::where('id',$id)->with('images')->first();
-        return view('backend.pages.slider.edit',compact('slider'));
+        $slider = Slider::where('id', $id)
+            ->with('images')
+            ->first();
+        return view('backend.pages.slider.edit', compact('slider'));
     }
 
     /**
@@ -74,21 +73,19 @@ class SliderController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
-        $slider = Slider::where('id',$id)->firstOrFail();
+        $slider = Slider::where('id', $id)->firstOrFail();
 
         $slider->update([
-            'name'=>$request->name,
-            'link'=>$request->link,
-            'content'=>$request->content,
-            'status'=>$request->status,
+            'image' => $request->image,
+            'name' => $request->name,
+            'link' => $request->link,
+            'content' => $request->content,
+            'status' => $request->status,
         ]);
-
 
         if ($request->hasFile('image')) {
             $this->fileSave('Slider', 'slider', $request, $slider);
         }
-
 
         return back()->withSuccess('Başarıyla Güncellendi!');
     }
@@ -98,10 +95,11 @@ class SliderController extends Controller
      */
     public function destroy(Request $request)
     {
+        $slider = Slider::where('id', $request->id)->firstOrFail();
 
-        $slider = Slider::where('id',$request->id)->firstOrFail();
-
-        $imageMedia = ImageMedia::where('model_name', 'Slider')->where('table_id', $slider->id)->first();
+        $imageMedia = ImageMedia::where('model_name', 'Slider')
+            ->where('table_id', $slider->id)
+            ->first();
 
         if (!empty($imageMedia->data)) {
             foreach ($imageMedia->data as $img) {
@@ -110,17 +108,16 @@ class SliderController extends Controller
             $imageMedia->delete();
         }
 
-
         $slider->delete();
-        return response(['error'=>false,'message'=>'Başarıyla Silindi.']);
+        return response(['error' => false, 'message' => 'Başarıyla Silindi.']);
     }
 
-    public function status(Request $request) {
-
+    public function status(Request $request)
+    {
         $update = $request->statu;
-        $updatecheck = $update == "false" ? '0' : '1';
+        $updatecheck = $update == 'false' ? '0' : '1';
 
-        Slider::where('id',$request->id)->update(['status'=> $updatecheck]);
-        return response(['error'=>false,'status'=>$update]);
+        Slider::where('id', $request->id)->update(['status' => $updatecheck]);
+        return response(['error' => false, 'status' => $update]);
     }
 }

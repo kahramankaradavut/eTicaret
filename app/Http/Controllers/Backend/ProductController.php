@@ -35,7 +35,7 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
 
-dd($request);
+
            $product = Product::create([
                 'name'=>$request->name,
                 'category_id'=>$request->category_id,
@@ -45,7 +45,6 @@ dd($request);
                 'size'=>$request->size,
                 'color'=>$request->color,
                 'qty'=>$request->qty,
-                'kdv'=>$request->kdv,
                 'title'=>$request->title,
                 'description'=>$request->description,
                 'keywords'=>$request->keywords,
@@ -100,7 +99,9 @@ dd($request);
         } */
 
         $product->update([
+            'image'=>$request->image,
             'name'=>$request->name,
+            'slug'=>$request->slug,
             'category_id'=>$request->category_id,
             'content'=>$request->content,
             'short_text'=>$request->short_text,
@@ -108,10 +109,6 @@ dd($request);
             'size'=>$request->size,
             'color'=>$request->color,
             'qty'=>$request->qty,
-            'kdv'=>$request->kdv,
-            'title'=>$request->title,
-            'description'=>$request->description,
-            'keywords'=>$request->keywords,
             'status'=>$request->status,
         ]);
 

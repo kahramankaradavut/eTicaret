@@ -22,9 +22,8 @@
               <thead>
                 <tr>
                   <th>Resim</th>
-                  <th>Başlık</th>
-                  <th>Slogan</th>
-                  <th>Link</th>
+                  <th>İsim</th>
+                  <th>Kategori</th>
                   <th>Status</th>
                   <th>Edit</th>
                 </tr>

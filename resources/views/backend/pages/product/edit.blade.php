@@ -80,8 +80,13 @@
 
 
                   <div class="form-group">
-                    <label for="name">Başlık</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{$product->name ?? ''}}" placeholder="Kategori Başlık">
+                    <label for="name">Ürün Adı</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{$product->name ?? ''}}" placeholder="Ürün Adı">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="keywords">Slug</label>
+                    <input type="text" class="form-control" id="slug" name="slug" value="{{$product->slug ?? ''}}" placeholder="Slug İsmi">
                   </div>
 
                   <div class="form-group">
@@ -134,24 +139,7 @@
                     <textarea class="form-control" id="editor" name="content" rows="3" placeholder="Kategori Yazısı">{{$product->content ?? ''}}</textarea>
                   </div>
 
-
-
-                  <div class="form-group">
-                    <label for="title">Seo Title</label>
-                    <input type="text" class="form-control" id="title" name="title" value="{{$product->title ?? ''}}" placeholder="Seo Title">
-                  </div>
-
-
-                  <div class="form-group">
-                    <label for="description">Seo Description</label>
-                    <input type="text" class="form-control" id="description" name="description" value="{{$product->description ?? ''}}" placeholder="Seo description">
-                  </div>
-
-
-                  <div class="form-group">
-                    <label for="keywords">Keywords</label>
-                    <input type="text" class="form-control" id="keywords" name="keywords" value="{{$product->keywords ?? ''}}" placeholder="Seo Keywords">
-                  </div>
+                  
 
 
                   <div class="form-group">
