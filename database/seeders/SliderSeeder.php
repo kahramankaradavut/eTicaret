@@ -13,12 +13,12 @@ class SliderSeeder extends Seeder
      */
     public function run(): void
     {
-            // Slider::create([
-            //     'image' => 'https://fakeimg.pl/250x100/',
-            //     'name' => 'Slider1',
-            //     'content' => 'Eticaret sitemize hoşgeldiniz',
-            //     'link'=> 'urunler',
-            //     'status'=>'1'
-            // ]);
+            Slider::create([
+                'image' => 'images/hero_1.jpg',
+                'name' => 'PiriSoft',
+                'content' => 'Eticaret sitemize hoşgeldiniz',
+                'link'=> 'urunler',
+                'status'=>'1'
+            ]);
     }
 }

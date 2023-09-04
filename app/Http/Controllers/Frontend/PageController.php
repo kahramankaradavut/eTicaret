@@ -13,7 +13,7 @@ class PageController extends Controller
     public function urunler(Request $request,$slug=null) {
 
 
-             $category = request()->segment(1) ?? null;
+            $category = request()->segment(1) ?? null;
 
             $sizes = !empty($request->size) ? explode(',',$request->size) : null;
 
@@ -28,13 +28,14 @@ class PageController extends Controller
 
 
             $anakategori = null;
-            $altkategori = null;
+
             if(!empty($category) && empty($slug)) {
                   $anakategori = Category::where('slug',$category)->first();
             }else if (!empty($category) && !empty($slug)){
-                 $anakategori = Category::where('slug',$category)->first();
-                 $altkategori = Category::where('slug',$slug)->first();
+                 $anakategori = Category::where('slug',$slug)->first();
+
             }
+
 
 
             $breadcrumb = [
@@ -43,20 +44,15 @@ class PageController extends Controller
                 ],
                 'active'=> 'Ürünler'
             ];
-
-            if(!empty($anakategori) && empty($altkategori)) {
-                $breadcrumb['active'] = $anakategori->name;
-            }
-
-            if(!empty($altkategori)) {
+            if(!empty($anakategori)) {
                 $breadcrumb['sayfalar'][] = [
-                    'link'=> route($anakategori->slug.'urunler'),
-                    'name' => $anakategori->name
+                    'link'=> route('urunler', $anakategori->slug),
+                    'name' => $anakategori->content
                 ];
-
-                $breadcrumb['active'] = $altkategori->name;
+                $breadcrumb['active'] = $anakategori->content;
             }
 
+            
 
           $products = Product::where('status','1')->select(['id','name','slug','size','color','price','category_id','image'])
             ->where(function($q) use($sizes,$colors,$startprice,$endprice) {
@@ -150,7 +146,7 @@ class PageController extends Controller
 
             if(!empty($category)) {
                 $breadcrumb['sayfalar'][] = [
-                    'link'=> route($category->slug.'urunler'),
+                    'link'=> route('urunler', $category->slug),
                     'name' => $category->name
                 ];
                 

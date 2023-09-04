@@ -16,7 +16,7 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $categoryId = [1,2,3,4,5,6,7,8,9];
+        $categoryId = [1,2,3,4,5,6];
         $sizeList = ['XS','S','M','L','XXL'];
         $color = ['Beyaz','Siyah','Kahverengi','Mor'];
 
@@ -24,8 +24,8 @@ class ProductFactory extends Factory
         $size = $sizeList[random_int(0,4)];
         return [
             'name'=> $colortext.' '.$size. ' Urun',
-            'category_id'=> $categoryId[random_int(0,8)],
-            'short_text'=>  $categoryId[random_int(0,8)].' idli ürün',
+            'category_id'=> $categoryId[random_int(0,5)],
+            'short_text'=>  $categoryId[random_int(0,5)].' idli ürün',
             'price'=> random_int(10,500),
             'size'=>  $size,
             'color'=>  $colortext,

@@ -14,7 +14,7 @@ class AboutSeeder extends Seeder
     public function run(): void
     {
        About::create([
-        'name'=>'Pratik Shop E-ticaret',
+        'name'=>'PiriSoft Shop E-ticaret',
         'content'=>'Hakkımızda yazısı burada',
         'text_1_icon'=>'icon-truck',
         'text_1'=>'Ücretsiz Kargo',

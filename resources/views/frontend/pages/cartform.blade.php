@@ -7,9 +7,7 @@
     <div class="container">
       <div class="row mb-5">
         <div class="col-md-12">
-          <div class="border p-4 rounded" role="alert">
-            Returning customer? <a href="#">Click here</a> to login
-          </div>
+          
         </div>
       </div>
       <form action="{{route('sepet.cartSave')}}" method="POST">
@@ -126,14 +124,23 @@
                         </tr>
                         @endforeach
                     @endif
+
+                    @if(session()->get('coupon_price'))
                     <tr>
-                        <td class="text-black font-weight-bold"><strong>İndirim</strong></td>
-                        <td class="text-black font-weight-bold"><strong>{{session()->get('coupon_price') ?? 0}} ₺</strong></td>
-                      </tr>
+                      <td class="text-black font-weight-bold"><strong>İndirim</strong></td>
+                      <td class="text-black font-weight-bold"><strong>{{session()->get('coupon_price')}} ₺</strong></td>
+                    </tr>
+                    @else
+                      <tr>
+                      <td class="text-black font-weight-bold"><strong>İndirim</strong></td>
+                      <td class="text-black font-weight-bold"><strong>{{$toplamTutar-session()->get('total_price')}} ₺</strong></td>
+                    </tr>
+                    @endif
                     <tr>
                       <td class="text-black font-weight-bold"><strong>Toplam Tutar</strong></td>
                       <td class="text-black font-weight-bold"><strong>{{session()->get('total_price') ?? 0}} ₺</strong></td>
                     </tr>
+                    
                   </tbody>
                 </table>
 

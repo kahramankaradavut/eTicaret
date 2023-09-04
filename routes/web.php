@@ -24,11 +24,14 @@ Route::group(['middleware'=>'sitesetting'], function() {
 
     Route::get('/', [PageHomeController::class,'anasayfa'])->name('anasayfa');
 
-    Route::get('/urunler', [PageController::class,'urunler'])->name('urunler');
-    Route::get('/erkek/{slug?}', [PageController::class,'urunler'])->name('erkekurunler');
-    Route::get('/kadin/{slug?}', [PageController::class,'urunler'])->name('kadinurunler');
-    Route::get('/cocuk/{slug?}', [PageController::class,'urunler'])->name('cocukurunler');
-    Route::get('/tumurunler-indirim', [PageController::class,'urunler'])->name('tumurunlerindirim');
+    Route::get('/urunler/{slug?}', [PageController::class,'urunler'])->name('urunler');
+    // Route::get('/erkek/{slug?}', [PageController::class,'urunler'])->name('alt-giyimurunler');
+    // Route::get('/kadin/{slug?}', [PageController::class,'urunler'])->name('ust-giyimurunler');
+    // Route::get('/cocuk/{slug?}', [PageController::class,'urunler'])->name('dis-giyimurunler');
+    // Route::get('/erkek/{slug?}', [PageController::class,'urunler'])->name('takimlarurunler');
+    // Route::get('/erkek/{slug?}', [PageController::class,'urunler'])->name('aksesuarurunler');
+    // Route::get('/erkek/{slug?}', [PageController::class,'urunler'])->name('ayakkabiurunler');
+
 
 
     Route::get('/urun/{slug}', [PageController::class,'urundetay'])->name('urundetay');

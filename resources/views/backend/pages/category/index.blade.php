@@ -24,7 +24,6 @@
                   <th>Resim</th>
                   <th>Başlık</th>
                   <th>Slogan</th>
-                  <th>Link</th>
                   <th>Status</th>
                   <th>Edit</th>
                 </tr>
@@ -42,7 +41,7 @@
 
                         </td>
                         <td>{{$category->name}}</td>
-                        <td>{{$category->category->name ?? ''}}</td>
+                        <td>{{$category->content ?? ''}}</td>
                         <td>
                           <div class="checkbox">
                             <label>
