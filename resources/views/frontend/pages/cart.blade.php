@@ -116,7 +116,7 @@
                                 <span class="text-black">Total</span>
                             </div>
                             <div class="col-md-6 text-right">
-                                <strong class="text-black newTotalPrice">{{session()->get('total_price') ?? ''}}</strong>
+                                <strong class="text-black newTotalPrice">{{session()->get('total_price') ?? ''}} ₺</strong>
                             </div>
                         </div>
 

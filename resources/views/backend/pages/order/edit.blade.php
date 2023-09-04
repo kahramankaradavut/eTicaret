@@ -196,7 +196,7 @@ tbody tr td {
                       <tr>
                         <th>Ürün Adı</th>
                         <th>Adet</th>
-                        <th>fİYAT</th>
+                        <th>Fiyat</th>
                         <th>Toplam Tutar</th>
                       </tr>
                     </thead>

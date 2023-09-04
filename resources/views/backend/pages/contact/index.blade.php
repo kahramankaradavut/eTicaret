@@ -5,7 +5,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Basic Table</h4>
+          <h4 class="card-title">Gelen Kutusu</h4>
 
             @if (session()->get('success'))
                 <div class="alert alert-success">

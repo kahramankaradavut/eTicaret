@@ -102,10 +102,12 @@ class CartController extends Controller
 
 
     public function add(Request $request) {
-            $productID= sifrelecoz($request->product_id);
+
+
+            $productID= $request->product_id;
             $qty= $request->qty ?? 1;
             $size= $request->size;
-             $urun = Product::find($productID);
+            $urun = Product::find($productID);
             if(!$urun) {
                 return back()->withError('Ürün Bulanamadı!');
             }

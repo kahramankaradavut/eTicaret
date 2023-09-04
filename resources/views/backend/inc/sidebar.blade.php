@@ -114,5 +114,12 @@
         </a>
       </li>
 
+      <li class="nav-item">
+        <a class="nav-link" href="{{route('panel.order.chart')}}">
+          <i class="icon-grid menu-icon"></i>
+          <span class="menu-title">Grafik</span>
+        </a>
+      </li>
+
     </ul>
   </nav>

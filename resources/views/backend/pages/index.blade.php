@@ -107,12 +107,6 @@
                     @if (!empty($topProducts) && $topProducts->count() > 0)
                         @foreach ($topProducts as $top)
                         <tr>
-
-                            @php
-                            $images = collect($top->product->images->data ?? '');
-                            @endphp
-
-                            <td><img src="{{asset($images->sortByDesc('vitrin')->first()['image'] ?? 'img/resimyok.png')}}" ></img></td>
                             <td>{{$top->product->name}}</td>
                             <td class="font-weight-bold">{{$top->total_sold}}</td>
                           </tr>

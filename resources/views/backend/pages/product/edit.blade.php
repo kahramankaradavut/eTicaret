@@ -85,11 +85,6 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="keywords">Slug</label>
-                    <input type="text" class="form-control" id="slug" name="slug" value="{{$product->slug ?? ''}}" placeholder="Slug İsmi">
-                  </div>
-
-                  <div class="form-group">
                     <label for="name">Kategori</label>
                     <select name="category_id" id="" class="form-control">,
                         <option value="">Kategori Seç</option>
@@ -129,17 +124,9 @@
                   </div>
 
                   <div class="form-group">
-                    <label for="name">Kısa Bilgi</label>
-                    <input type="text" class="form-control" id="short_text" name="short_text" value="{{$product->short_text ?? ''}}" placeholder="Kısa Bilgi">
-                  </div>
-
-
-                  <div class="form-group">
                     <label for="content">İçerik Yazısı</label>
                     <textarea class="form-control" id="editor" name="content" rows="3" placeholder="Kategori Yazısı">{{$product->content ?? ''}}</textarea>
                   </div>
-
-                  
 
 
                   <div class="form-group">

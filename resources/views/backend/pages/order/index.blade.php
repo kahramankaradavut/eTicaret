@@ -5,7 +5,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Basic Table</h4>
+          <h4 class="card-title">Siparişler</h4>
 
             @if (session()->get('success'))
                 <div class="alert alert-success">
@@ -18,6 +18,7 @@
             <table class="table">
               <thead>
                 <tr>
+                  <th>Sipariş Numarası</th>
                   <th>Ad Soyad</th>
                   <th>Email</th>
                   <th>Telefon</th>
@@ -31,6 +32,7 @@
                 @if (!empty($orders) && $orders->count() > 0)
                     @foreach ($orders as $order)
                     <tr class="item" item-id="{{ $order->id }}">
+                        <td>{{$order->order_no}}</td>
                         <td>{{$order->name}}</td>
                         <td>{{$order->email ?? ''}}</td>
                         <td>{{$order->phone}}</td>

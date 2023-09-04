@@ -21,7 +21,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Resim</th>
+                  
                   <th>Kupon</th>
                   <th>İndirim Fiyat</th>
                   <th>Yüzde İndirim Fiyat</th>

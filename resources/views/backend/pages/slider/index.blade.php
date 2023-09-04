@@ -5,7 +5,7 @@
     <div class="col-lg-12 grid-margin stretch-card">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Basic Table</h4>
+          <h4 class="card-title">Slider</h4>
           <p class="card-description">
             <a href="{{route('panel.slider.create')}}" class="btn btn-primary">Yeni</a>
           </p>

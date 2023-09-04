@@ -69,6 +69,7 @@ if (!function_exists('strLimit')) {
         }
     }
 
+
     if (!function_exists('sifrelecoz')) {
         function sifrelecoz($string){
             return decrypt($string);

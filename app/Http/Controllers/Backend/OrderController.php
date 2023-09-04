@@ -12,6 +12,7 @@ class OrderController extends Controller
 {
   public function index () {
      $orders = Invoice::withCount('orders')->paginate(20);
+
     return view('backend.pages.order.index',compact('orders'));
   }
 
