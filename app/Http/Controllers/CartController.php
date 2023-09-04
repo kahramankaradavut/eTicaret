@@ -62,7 +62,7 @@ class CartController extends Controller
 
         session()->put('total_price',$newtotalPrice);
 
-        if(count(session()->get('cart')) == 0) {
+        if(count($cartItem) == 0) {
             session()->forget('coupon_code');
         }
 

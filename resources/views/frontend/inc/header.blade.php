@@ -38,7 +38,7 @@
         <ul class="site-menu js-clone-nav d-none d-md-block">
          <li class="active"><a href="{{route('anasayfa')}}">Anasayfa</a></li>
           <li class="has-children">
-            <a href="">Kategori</a>
+            <a href="">Kategorİ</a>
             <ul class="dropdown">
                 @if (!empty($categories) && $categories->count() > 0)
                     @foreach ($categories->where('cat_ust',null) as $category)
@@ -65,10 +65,10 @@
             </ul>
           </li>
           <li>
-            <a href="{{route('hakkimizda')}}">Hakkımzda</a>
+            <a href="{{route('hakkimizda')}}">Hakkımızda</a>
           </li>
           <li><a href="{{route('urunler')}}">Ürünler</a></li>
-          <li><a href="{{route('iletisim')}}">İletişim</a></li>
+          <li><a href="{{route('iletisim')}}">İletİşİm</a></li>
         </ul>
       </div>
     </nav>

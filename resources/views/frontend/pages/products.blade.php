@@ -108,34 +108,7 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <div class="site-section site-blocks-2">
-              <div class="row justify-content-center text-center mb-5">
-                <div class="col-md-7 site-section-heading pt-4">
-                  <h2>Kategoriler</h2>
-                </div>
-              </div>
-              <div class="row">
-                @if (!empty($categories))
-                    @foreach ($categories->where('cat_ust',null) as $category)
-                    <div class="col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0" data-aos="fade" data-aos-delay="">
-                        <a class="block-2-item" href="{{route('urunler')}}">
-                          <figure class="image">
-                            <img src="{{asset($category->image)}}" alt="" class="img-fluid">
-                          </figure>
-                          <div class="text">
-                            <h3>{{$category->name}}</h3>
-                          </div>
-                        </a>
-                      </div>
-                    @endforeach
-                @endif
-              </div>
-
-          </div>
-        </div>
-      </div>
+      
 
     </div>
   </div>
