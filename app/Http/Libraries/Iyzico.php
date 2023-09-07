@@ -6,6 +6,7 @@ class Iyzico
 {
     protected $options;
     protected $request;
+    protected $basketItems;
 
     public function __construct()
     {
@@ -13,6 +14,7 @@ class Iyzico
         $this->options->setApiKey('your api key');
         $this->options->setSecretKey('your secret key');
         $this->options->setBaseUrl('https://sandbox-api.iyzipay.com');
+        $this->basketItems = [];
     }
 
     public function setForm(array $params)
@@ -21,30 +23,76 @@ class Iyzico
         $this->request->setLocale(\Iyzipay\Model\Locale::TR);
         $this->request->setConversationId($params['conversationId']);
         $this->request->setPrice($params['price']);
-        $this->request->setPaidPrice($params['paidprice']);
+        $this->request->setPaidPrice($params['paidPrice']);
         $this->request->setCurrency(\Iyzipay\Model\Currency::TL);
         $this->request->setBasketId($params['basketId']);
         $this->request->setPaymentGroup(\Iyzipay\Model\PaymentGroup::PRODUCT);
         $this->request->setCallbackUrl('https://www.merchant.com/callback');
         $this->request->setEnabledInstallments([2, 3, 6, 9]);
+        
+        return $this;
     }
 
-    public function setBuyer(Array $params)
+    public function setBuyer(array $params)
     {
-        $this->buyer = new \Iyzipay\Model\Buyer();
-        $this->buyer->setId('BY789');
-        $this->buyer->setName('John');
-        $this->buyer->setSurname('Doe');
-        $this->buyer->setGsmNumber('+905350000000');
-        $this->buyer->setEmail('email@email.com');
-        $this->buyer->setIdentityNumber('74300864791');
-        $this->buyer->setLastLoginDate('2015-10-05 12:43:35');
-        $this->buyer->setRegistrationDate('2013-04-21 15:12:09');
-        $this->buyer->setRegistrationAddress('Nidakule Göztepe, Merdivenköy Mah. Bora Sok. No:1');
-        $this->buyer->setIp('85.34.78.112');
-        $this->buyer->setCity('Istanbul');
-        $this->buyer->setCountry('Turkey');
-        $this->buyer->setZipCode('34732');
+        $buyer = new \Iyzipay\Model\Buyer();
+        $buyer->setId($params['id']);
+        $buyer->setName($params['name']);
+        $buyer->setSurname($params['surname']);
+        $buyer->setGsmNumber($params['phone']);
+        $buyer->setEmail($params['email']);
+        $buyer->setIdentityNumber($params['identity']);
+        $buyer->setRegistrationAddress($params['address']);
+        $buyer->setIp($params['ip']);
+        $buyer->setCity($params['city']);
+        $buyer->setCountry($params['country']);
         $this->request->setBuyer($buyer);
+        
+        return $this;
+    }
+
+    public function setShipping(array $params)
+    {
+        $shippingAddress = new \Iyzipay\Model\Address();
+        $shippingAddress->setContactName($params['name']);
+        $shippingAddress->setCity($params['city']);
+        $shippingAddress->setCountry($params['country']);
+        $shippingAddress->setAddress($params['address']);
+        $this->request->setShippingAddress($shippingAddress);
+        
+        return $this;
+    }
+
+    public function setBilling(array $params)
+    {
+        $billingAddress = new \Iyzipay\Model\Address();
+        $billingAddress->setContactName($params['name']);
+        $billingAddress->setCity($params['city']);
+        $billingAddress->setCountry($params['country']);
+        $billingAddress->setAddress($params['address']);
+        $this->request->setBillingAddress($billingAddress);
+
+        return $this;
+    }
+
+    public function setItems(array $items)
+    {
+        foreach ($items as $key => $value) {
+            dd($value['name']);
+            $basketItem = new \Iyzipay\Model\BasketItem();
+            $basketItem->setId($value['id']);
+            $basketItem->setName($value['name']);
+            $basketItem->setCategory1($value['category']);
+            $basketItem->setItemType(\Iyzipay\Model\BasketItemType::PHYSICAL);
+            $basketItem->setPrice($value['price']);
+            array_push($this->basketItems, $basketItem);
+        }
+        $this->request->setBasketItems($basketItems);
+        return $this;
+    }
+
+    public function paymentForm(){
+        $form = \Iyzipay\Model\CheckoutFormInitialize::create($this->request, $this->options);
+        return $form;
     }
 }

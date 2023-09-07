@@ -7,239 +7,229 @@ use App\Models\Coupon;
 use App\Models\Invoice;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Libraries\Iyzico;
+
 
 class CartController extends Controller
 {
-    public function index() {
-
+    public function index()
+    {
         $cartItem = $this->sepetList();
-
-
 
         $seolists = metaolustur('sepet');
 
         $seo = [
-            'title' =>  $seolists['title'] ?? '',
+            'title' => $seolists['title'] ?? '',
             'description' => $seolists['description'] ?? '',
             'keywords' => $seolists['keywords'] ?? '',
             'image' => asset('img/page-bg.jpg'),
-            'url'=>  $seolists['currenturl'],
-            'canonical'=> $seolists['trpage'],
+            'url' => $seolists['currenturl'],
+            'canonical' => $seolists['trpage'],
             'robots' => 'noindex, follow',
         ];
 
-
         $breadcrumb = [
-            'sayfalar' => [
-
-            ],
-            'active'=> 'Sepet'
+            'sayfalar' => [],
+            'active' => 'Sepet',
         ];
 
-        return view('frontend.pages.cart',compact('breadcrumb','seo','cartItem'));
+        return view('frontend.pages.cart', compact('breadcrumb', 'seo', 'cartItem'));
     }
 
-    public function sepetList() {
+    public function sepetList()
+    {
         $cartItem = session()->get('cart') ?? [];
         $totalPrice = 0;
         foreach ($cartItem as $cart) {
             $toplamTutar = $cart['price'] * $cart['qty'];
-            $totalPrice +=  $toplamTutar;
+            $totalPrice += $toplamTutar;
         }
         if (session()->get('coupon_code') && $totalPrice != 0) {
-            $kupon = Coupon::where('name',session()->get('coupon_code'))->where('status','1')->first();
+            $kupon = Coupon::where('name', session()->get('coupon_code'))
+                ->where('status', '1')
+                ->first();
             $kuponrate = $kupon->discount_rate ?? 0;
             $kuponprice = $kupon->price ?? 0;
-            if($kuponprice > 0){
-            $newtotalPrice = $totalPrice - $kuponprice;
+            if ($kuponprice > 0) {
+                $newtotalPrice = $totalPrice - $kuponprice;
             }
-            if($kuponrate > 0){
-            $newtotalPrice = $totalPrice - ($totalPrice * $kuponrate/100);
+            if ($kuponrate > 0) {
+                $newtotalPrice = $totalPrice - ($totalPrice * $kuponrate) / 100;
             }
-        }else {
+        } else {
             $newtotalPrice = $totalPrice;
         }
 
-        session()->put('total_price',$newtotalPrice);
+        session()->put('total_price', $newtotalPrice);
 
-        if(count($cartItem) == 0) {
+        if (count($cartItem) == 0) {
             session()->forget('coupon_code');
         }
 
-        return  $cartItem;
+        return $cartItem;
     }
 
-
-    public function sepetform() {
-
+    public function sepetform()
+    {
         $cartItem = $this->sepetList();
-
-
-
 
         $seolists = metaolustur('sepet');
 
         $seo = [
-            'title' =>  $seolists['title'] ?? '',
+            'title' => $seolists['title'] ?? '',
             'description' => $seolists['description'] ?? '',
             'keywords' => $seolists['keywords'] ?? '',
             'image' => asset('img/page-bg.jpg'),
-            'url'=>  $seolists['currenturl'],
-            'canonical'=> $seolists['trpage'],
+            'url' => $seolists['currenturl'],
+            'canonical' => $seolists['trpage'],
             'robots' => 'noindex, follow',
         ];
 
-
         $breadcrumb = [
-            'sayfalar' => [
-
-            ],
-            'active'=> 'Sepet'
+            'sayfalar' => [],
+            'active' => 'Sepet',
         ];
 
-        return view('frontend.pages.cartform',compact('breadcrumb','seo','cartItem'));
+        return view('frontend.pages.cartform', compact('breadcrumb', 'seo', 'cartItem'));
     }
 
+    public function add(Request $request)
+    {
+        $productID = $request->product_id;
+        $qty = $request->qty ?? 1;
+        $size = $request->size;
+        $urun = Product::find($productID);
+        if (!$urun) {
+            return back()->withError('Ürün Bulanamadı!');
+        }
+        $cartItem = session('cart', []);
 
-    public function add(Request $request) {
+        if (!empty($request->coupon_code) && $request->coupon_code == 'tumurun') {
+            $kupon = Coupon::where('name', $request->coupon_code)
+                ->where('status', '1')
+                ->first();
 
+            $kuponprice = $kupon->discount_rate ? 2 : 1;
 
-            $productID= $request->product_id;
-            $qty= $request->qty ?? 1;
-            $size= $request->size;
-            $urun = Product::find($productID);
-            if(!$urun) {
-                return back()->withError('Ürün Bulanamadı!');
-            }
-            $cartItem = session('cart',[]);
+            session()->put('coupon_code', $request->coupon_code);
+        } else {
+            $kuponprice = 1;
+        }
 
-            if(!empty($request->coupon_code) && $request->coupon_code == 'tumurun') {
-                 $kupon = Coupon::where('name',$request->coupon_code)->where('status','1')->first();
+        if (array_key_exists($productID, $cartItem)) {
+            $cartItem[$productID]['qty'] += $qty;
+        } else {
+            $cartItem[$productID] = [
+                'image' => $urun->image,
+                'name' => $urun->name,
+                'price' => $urun->price / $kuponprice,
+                'qty' => $qty,
+                'size' => $size,
+            ];
+        }
+        session(['cart' => $cartItem]);
 
-                $kuponprice = $kupon->discount_rate ? 2 : 1;
+        if ($request->ajax()) {
+            return response()->json(['sepetCount' => count(session()->get('cart')), 'message' => 'Ürün Sepete Eklendi!']);
+        }
 
-                session()->put('coupon_code',$request->coupon_code);
-
-            }else {
-                $kuponprice = 1;
-            }
-
-            if(array_key_exists($productID,$cartItem)){
-                $cartItem[$productID]['qty'] += $qty;
-            }else{
-                $cartItem[$productID]=[
-                    'image'=>$urun->image,
-                    'name'=>$urun->name,
-                    'price'=> $urun->price /  $kuponprice,
-                    'qty'=>$qty,
-                    'size'=>$size,
-                ];
-            }
-            session(['cart'=>$cartItem]);
-
-            if($request->ajax()) {
-                return response()->json(['sepetCount'=>count(session()->get('cart')), 'message'=>'Ürün Sepete Eklendi!']);
-            }
-
-           return back()->withSuccess('Ürün Sepete Eklendi!');
+        return back()->withSuccess('Ürün Sepete Eklendi!');
     }
 
-    public function newqty(Request $request) {
-        $productID= $request->product_id;
-        $qty= $request->qty ?? 1;
+    public function newqty(Request $request)
+    {
+        $productID = $request->product_id;
+        $qty = $request->qty ?? 1;
         $itemtotal = 0;
-         $urun = Product::find($productID);
-        if(!$urun) {
+        $urun = Product::find($productID);
+        if (!$urun) {
             return response()->json('Ürün Bulanamadı!');
         }
-        $cartItem = session('cart',[]);
+        $cartItem = session('cart', []);
 
-
-        if(array_key_exists($productID,$cartItem)){
+        if (array_key_exists($productID, $cartItem)) {
             $cartItem[$productID]['qty'] = $qty;
-            if($qty == 0 || $qty < 0){
+            if ($qty == 0 || $qty < 0) {
                 unset($cartItem[$productID]);
             }
 
-
-            if(session()->get('coupon_code') && session()->get('coupon_code') == 'tumurun') {
+            if (session()->get('coupon_code') && session()->get('coupon_code') == 'tumurun') {
                 $price = $urun->price / 2;
-            }else {
+            } else {
                 $price = $urun->price;
             }
-            $itemtotal =  $price * $qty;
-
+            $itemtotal = $price * $qty;
         }
 
-        session(['cart'=>$cartItem]);
+        session(['cart' => $cartItem]);
 
+        $this->sepetList();
 
-         $this->sepetList();
-
-        if($request->ajax()) {
-            return response()->json(['itemTotal'=>$itemtotal, 'totalPrice'=>session()->get('total_price'), 'message'=>'Sepet Güncellendi']);
+        if ($request->ajax()) {
+            return response()->json(['itemTotal' => $itemtotal, 'totalPrice' => session()->get('total_price'), 'message' => 'Sepet Güncellendi']);
         }
     }
 
-
-    public function remove(Request $request) {
-
-        $productID= sifrelecoz($request->product_id);
-        $cartItem = session('cart',[]);
-        if(array_key_exists($productID,$cartItem)) {
+    public function remove(Request $request)
+    {
+        $productID = sifrelecoz($request->product_id);
+        $cartItem = session('cart', []);
+        if (array_key_exists($productID, $cartItem)) {
             unset($cartItem[$productID]);
         }
-        session(['cart'=>$cartItem]);
+        session(['cart' => $cartItem]);
 
-        if(count(session()->get('cart')) == 0) {
+        if (count(session()->get('cart')) == 0) {
             session()->forget('coupon_code');
         }
 
-        if($request->ajax()) {
-            return response()->json(['sepetCount'=>count(session()->get('cart')), 'message'=>'Ürün Sepetten Kaldırıldı!']);
+        if ($request->ajax()) {
+            return response()->json(['sepetCount' => count(session()->get('cart')), 'message' => 'Ürün Sepetten Kaldırıldı!']);
         }
 
         return back()->withSuccess('Başarıyla Sepetten Kaldırıldı!');
     }
 
+    public function couponcheck(Request $request)
+    {
+        $kupon = Coupon::where('name', $request->coupon_name)
+            ->where('status', '1')
+            ->first();
 
-    public function couponcheck(Request $request) {
+        if (empty($kupon)) {
+            return back()->withError('Kupon Bulunamadı!');
+        }
 
-             $kupon = Coupon::where('name',$request->coupon_name)->where('status','1')->first();
+        $kuponcode = $kupon->name ?? '';
+        session()->put('coupon_code', $kuponcode);
 
-             if(empty($kupon)) {
-                return back()->withError('Kupon Bulunamadı!');
-             }
+        $kuponprice = $kupon->price ?? 0;
+        session()->put('coupon_price', $kuponprice);
 
-             $kuponcode = $kupon->name ?? '';
-            session()->put('coupon_code',$kuponcode);
+        $this->sepetList();
 
-             $kuponprice = $kupon->price ?? 0;
-             session()->put('coupon_price',$kuponprice);
-
-             $this->sepetList();
-
-             return back()->withSuccess('Kupon Uygulandı!');
+        return back()->withSuccess('Kupon Uygulandı!');
     }
 
-
-
-    function generateKod() {
+    function generateKod()
+    {
         $siparisno = generateOTP(7);
-            if ($this->barcodeKodExists($siparisno)) {
-                return $this->generateKod();
-            }
-
-            return $siparisno;
+        if ($this->barcodeKodExists($siparisno)) {
+            return $this->generateKod();
         }
 
-        function barcodeKodExists($siparisno) {
-            return Invoice::where('order_no',$siparisno)->exists();
-        }
+        return $siparisno;
+    }
 
+    function barcodeKodExists($siparisno)
+    {
+        return Invoice::where('order_no', $siparisno)->exists();
+    }
 
-    public function cartSave(Request $request) {
-            $request->validate([
+    public function cartSave(Request $request)
+    {
+        $request->validate(
+            [
                 'name' => 'required|string|min:3',
                 'email' => 'required|email',
                 'phone' => 'required|string',
@@ -250,7 +240,8 @@ class CartController extends Controller
                 'district' => 'required|string',
                 'zip_code' => 'required|string',
                 'note' => 'nullable|string',
-            ],[
+            ],
+            [
                 'name.required' => __('İsim alanı zorunludur.'),
                 'name.string' => __('İsim bir metin olmalıdır.'),
                 'name.min' => __('İsim en az 3 karakterden oluşmalıdır.'),
@@ -270,40 +261,107 @@ class CartController extends Controller
                 'zip_code.required' => __('Posta kodu alanı zorunludur.'),
                 'zip_code.string' => __('Posta kodu bir metin olmalıdır.'),
                 'note.string' => __('Not bir metin olmalıdır.'),
+            ],
+        );
+
+        $invoce = Invoice::create([
+            'user_id' => auth()->user()->id ?? null,
+            'order_no' => $this->generateKod(),
+            'country' => $request->country,
+            'name' => $request->name,
+            'company_name' => $request->company_name ?? null,
+            'address' => $request->address ?? null,
+            'city' => $request->city ?? null,
+            'district' => $request->district ?? null,
+            'zip_code' => $request->zip_code ?? null,
+            'email' => $request->email ?? null,
+            'phone' => $request->phone ?? null,
+            'note' => $request->note ?? null,
+        ]);
+
+        $cart = session()->get('cart') ?? [];
+
+        foreach ($cart as $key => $item) {
+            Order::create([
+                'order_no' => $invoce->order_no,
+                'product_id' => $key,
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'qty' => $item['qty'],
             ]);
+        }
 
-           $invoce = Invoice::create([
-                "user_id"=> auth()->user()->id ?? null,
-                "order_no"=> $this->generateKod(),
-                "country"=> $request->country,
-                "name"=> $request->name,
-                "company_name"=> $request->company_name ?? null,
-                "address"=> $request->address ?? null,
-                "city"=> $request->city ?? null,
-                "district"=> $request->district ?? null,
-                "zip_code"=> $request->zip_code ?? null,
-                "email"=> $request->email ?? null,
-                "phone"=> $request->phone ?? null,
-                "note"=> $request->note ?? null,
-            ]);
-
-
-            $cart = session()->get('cart') ?? [];
-
-            foreach ( $cart as $key => $item) {
-                Order::create([
-                    'order_no'=> $invoce->order_no,
-                    'product_id'=>$key,
-                    'name'=>$item['name'],
-                    'price'=>$item['price'],
-                    'qty'=>$item['qty'],
-
-                ]);
-            }
-
-            session()->forget('cart');
-            return redirect()->route('anasayfa')->withSuccess('Alışveriş Başarıyla Tamamlandı.');
-
+        session()->forget('cart');
+        return redirect()
+            ->route('anasayfa')
+            ->withSuccess('Alışveriş Başarıyla Tamamlandı.');
     }
 
+    public function odeme()
+    {
+        $iyzico = new Iyzico();
+        $payment = $iyzico
+            ->setForm([
+                'conversationId' => '123456789',
+                'price' => 120.0,
+                'paidPrice' => 126.0,
+                'basketId' => 'SPT1234',
+            ])
+            ->setBuyer([
+                'id' => 120,
+                'name' => 'Kahraman',
+                'surname' => 'Karadavut',
+                'phone' => '05055555555',
+                'email' => 'test@gmail.com',
+                'identity' => '12312312123',
+                'address' => 'Alıcı adresi Kayseri',
+                'ip' => request()->ip(),
+                'city' => 'Kayseri',
+                'country' => 'Türkiye',
+            ])
+            ->setShipping([
+                'name' => 'Kahraman Karadavut',
+                'city' => 'Kayseri',
+                'country' => 'Türkiye',
+                'address' => 'Kargonun gideceği adres.',
+            ])
+            ->setBilling([
+                'name' => 'Kahraman Karadavut',
+                'city' => 'Kayseri',
+                'country' => 'Türkiye',
+                'address' => 'Faturanın gideceği adres.',
+            ])
+            // ->setItems([
+            //     'id' => 8749,
+            //     'name' => 'Kırmızı Ayakkabı',
+            //     'category' => 'Ayakkabı',
+            //     'price' => 200.0,
+            // ],
+            // [
+            //     'id' => 8750,
+            //     'name' => 'Siyah Ayakkabı',
+            //     'category' => 'Ayakkabı',
+            //     'price' => 200.0,
+            // ],
+            // [
+            //     'id' => 8751,
+            //     'name' => 'Beyaz Ayakkabı',
+            //     'category' => 'Ayakkabı',
+            //     'price' => 200.0,
+            // ]
+            // )
+            ->paymentForm();
+
+            dd($iyzico);
+
+        $breadcrumb = [
+            'sayfalar' => [],
+            'active' => 'Ödeme Sayfası',
+        ];
+        return view('frontend.pages.odeme', [
+            'paymentContent' => $payment->getCheckoutFormContent(),
+            'paymentStatus' => $payment->getStatus(),
+        ],
+         compact('breadcrumb'));
+    }
 }
