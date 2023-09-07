@@ -18,7 +18,7 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     *a
+     *
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function index()
