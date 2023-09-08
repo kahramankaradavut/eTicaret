@@ -11,8 +11,8 @@ class Iyzico
     public function __construct()
     {
         $this->options = new \Iyzipay\Options();
-        $this->options->setApiKey('your api key');
-        $this->options->setSecretKey('your secret key');
+        $this->options->setApiKey('sandbox-HdVVvmbQJF0k1m3CcJ0wfR0zuwYdAvqQ');
+        $this->options->setSecretKey('sandbox-x4isoliTvVaFDxSeq5DywCuBo6P7I73F');
         $this->options->setBaseUrl('https://sandbox-api.iyzipay.com');
         $this->basketItems = [];
     }
@@ -27,9 +27,9 @@ class Iyzico
         $this->request->setCurrency(\Iyzipay\Model\Currency::TL);
         $this->request->setBasketId($params['basketId']);
         $this->request->setPaymentGroup(\Iyzipay\Model\PaymentGroup::PRODUCT);
-        $this->request->setCallbackUrl('https://www.merchant.com/callback');
+        $this->request->setCallbackUrl(view('frontend.pages.odemeCallBack'));
         $this->request->setEnabledInstallments([2, 3, 6, 9]);
-        
+
         return $this;
     }
 
@@ -47,7 +47,7 @@ class Iyzico
         $buyer->setCity($params['city']);
         $buyer->setCountry($params['country']);
         $this->request->setBuyer($buyer);
-        
+
         return $this;
     }
 
@@ -59,7 +59,7 @@ class Iyzico
         $shippingAddress->setCountry($params['country']);
         $shippingAddress->setAddress($params['address']);
         $this->request->setShippingAddress($shippingAddress);
-        
+
         return $this;
     }
 
@@ -78,7 +78,6 @@ class Iyzico
     public function setItems(array $items)
     {
         foreach ($items as $key => $value) {
-            dd($value['name']);
             $basketItem = new \Iyzipay\Model\BasketItem();
             $basketItem->setId($value['id']);
             $basketItem->setName($value['name']);
@@ -87,12 +86,23 @@ class Iyzico
             $basketItem->setPrice($value['price']);
             array_push($this->basketItems, $basketItem);
         }
-        $this->request->setBasketItems($basketItems);
+        $this->request->setBasketItems($this->basketItems);
         return $this;
     }
 
-    public function paymentForm(){
+    public function paymentForm()
+    {
         $form = \Iyzipay\Model\CheckoutFormInitialize::create($this->request, $this->options);
         return $form;
+    }
+
+    public function callbackForm($token, $conversationId)
+    {
+        $request = new \Iyzipay\Request\RetrieveCheckoutFormRequest();
+        $request->setLocale(\Iyzipay\Model\Locale::TR);
+        $request->setConversationId($conversationId);
+        $request->setToken($token);
+        $checkoutForm = \Iyzipay\Model\CheckoutForm::retrieve($request, $this->options);
+        return $checkoutForm;
     }
 }

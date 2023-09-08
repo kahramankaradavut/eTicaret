@@ -33,6 +33,7 @@ return array(
     'App\\Http\\Controllers\\Frontend\\PageHomeController' => $baseDir . '/app/Http/Controllers/Frontend/PageHomeController.php',
     'App\\Http\\Controllers\\HomeController' => $baseDir . '/app/Http/Controllers/HomeController.php',
     'App\\Http\\Kernel' => $baseDir . '/app/Http/Kernel.php',
+    'App\\Http\\Libraries\\Iyzico' => $baseDir . '/app/Http/Libraries/Iyzico.php',
     'App\\Http\\Middleware\\Authenticate' => $baseDir . '/app/Http/Middleware/Authenticate.php',
     'App\\Http\\Middleware\\EncryptCookies' => $baseDir . '/app/Http/Middleware/EncryptCookies.php',
     'App\\Http\\Middleware\\PanelSettingMiddleware' => $baseDir . '/app/Http/Middleware/PanelSettingMiddleware.php',

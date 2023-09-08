@@ -592,6 +592,7 @@ class ComposerStaticInit45d1b4befc3037af5bf5b46bea79a305
         'App\\Http\\Controllers\\Frontend\\PageHomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Frontend/PageHomeController.php',
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
+        'App\\Http\\Libraries\\Iyzico' => __DIR__ . '/../..' . '/app/Http/Libraries/Iyzico.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
         'App\\Http\\Middleware\\PanelSettingMiddleware' => __DIR__ . '/../..' . '/app/Http/Middleware/PanelSettingMiddleware.php',

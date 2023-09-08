@@ -50,7 +50,7 @@ Route::group(['middleware'=>'sitesetting'], function() {
     Route::post('/sepet/newqty', [CartController::class,'newqty'])->name('sepet.newqty');
     Route::post('/sepet/save', [CartController::class,'cartSave'])->name('sepet.cartSave');
     Route::get('/sepet/odeme', [CartController::class, 'odeme']);
-
+    Route::match(['get', 'post'], '/sepet/odeme-tamamlandi', [CartController::class, 'callback'], ['as' => 'payment_callback']);
 
     Auth::routes();
 

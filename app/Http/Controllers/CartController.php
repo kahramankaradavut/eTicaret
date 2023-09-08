@@ -331,28 +331,28 @@ class CartController extends Controller
                 'country' => 'Türkiye',
                 'address' => 'Faturanın gideceği adres.',
             ])
-            // ->setItems([
-            //     'id' => 8749,
-            //     'name' => 'Kırmızı Ayakkabı',
-            //     'category' => 'Ayakkabı',
-            //     'price' => 200.0,
-            // ],
-            // [
-            //     'id' => 8750,
-            //     'name' => 'Siyah Ayakkabı',
-            //     'category' => 'Ayakkabı',
-            //     'price' => 200.0,
-            // ],
-            // [
-            //     'id' => 8751,
-            //     'name' => 'Beyaz Ayakkabı',
-            //     'category' => 'Ayakkabı',
-            //     'price' => 200.0,
-            // ]
-            // )
+            ->setItems([
+            [
+                'id' => 8749,
+                'name' => 'Kırmızı Ayakkabı',
+                'category' => 'Ayakkabı',
+                'price' => 40.0,
+            ],
+            [
+                'id' => 8750,
+                'name' => 'Siyah Ayakkabı',
+                'category' => 'Ayakkabı',
+                'price' => 40.0,
+            ],
+            [
+                'id' => 8751,
+                'name' => 'Beyaz Ayakkabı',
+                'category' => 'Ayakkabı',
+                'price' => 40.0,
+            ]
+            ]
+            )
             ->paymentForm();
-
-            dd($iyzico);
 
         $breadcrumb = [
             'sayfalar' => [],
@@ -361,7 +361,23 @@ class CartController extends Controller
         return view('frontend.pages.odeme', [
             'paymentContent' => $payment->getCheckoutFormContent(),
             'paymentStatus' => $payment->getStatus(),
+
         ],
          compact('breadcrumb'));
+    }
+
+    public function callback(){
+        $token = $_REQUEST['token'];
+        $coversationId = '123456789';
+        $iyzico = new Iyzico();
+        $response = $iyzico->callbackForm($token, $conversationId);
+
+        $breadcrumb = [
+            'sayfalar' => [],
+            'active' => 'Ödeme Sayfası',
+        ];
+        return view('frontend.pages.odemeCallBack', [
+            'paymentStatus' => $response->getPaymentStatus(),
+        ], compact('breadcrumb'));
     }
 }
