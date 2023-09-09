@@ -3,7 +3,6 @@
 @section('content')
 
 @include('frontend.inc.breadcrumb')
-
     <div class="site-section site-section-sm site-blocks-1 border-0" data-aos="fade">
         <div class="container text-center"> <!-- text-center sınıfı içeriği ortalar -->
             <div class="row justify-content-center"> <!-- içeriği yatayda ortalar -->

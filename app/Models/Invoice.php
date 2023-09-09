@@ -9,7 +9,9 @@ class Invoice extends Model
 {
     protected $fillable = [
         'order_no',
+        'identity',
         'name',
+        'surname',
         'email',
         'phone',
         'company_name',

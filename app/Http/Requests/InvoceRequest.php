@@ -38,9 +38,14 @@ class InvoceRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'identity.required' => __('TC Kimlik alanı zorunludur.'),
+            'identity.valid_tc_kimlik' => __('TC Kimlik geçersiz!'),
             'name.required' => __('İsim alanı zorunludur.'),
             'name.string' => __('İsim bir metin olmalıdır.'),
             'name.min' => __('İsim en az 3 karakterden oluşmalıdır.'),
+            'surname.required' => __('Soyad alanı zorunludur.'),
+            'surname.string' => __('Soyad bir metin olmalıdır.'),
+            'surname.min' => __('Soyad en az 3 karakterden oluşmalıdır.'),
             'email.required' => __('E-posta alanı zorunludur.'),
             'email.email' => __('Geçerli bir e-posta adresi girilmelidir.'),
             'phone.required' => __('Telefon alanı zorunludur.'),

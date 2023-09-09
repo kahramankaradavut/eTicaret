@@ -28,8 +28,16 @@
             </div>
             <div class="form-group row">
               <div class="col-md-12">
-                <label for="c_fname" class="text-black">Ad Soyad <span class="text-danger">*</span></label>
+                <label for="c_fidentity" class="text-black">TC Kimlik Numarası  <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="c_fidentity" name="identity">
+              </div>
+              <div class="col-md-12">
+                <label for="c_fname" class="text-black">Ad  <span class="text-danger">*</span></label>
                 <input type="text" class="form-control" id="c_fname" name="name">
+              </div>
+              <div class="col-md-12">
+                <label for="c_fsurname" class="text-black">Soyad <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="c_fsurname" name="surname">
               </div>
             </div>
 
@@ -69,7 +77,7 @@
               </div>
               <div class="col-md-6">
                 <label for="c_phone" class="text-black">Telefon <span class="text-danger">*</span></label>
-                <input type="text" class="form-control" id="c_phone" name="phone" placeholder="Phone Number">
+                <input type="text" class="form-control" id="c_phone" name="phone" placeholder="05055051515">
               </div>
             </div>
 

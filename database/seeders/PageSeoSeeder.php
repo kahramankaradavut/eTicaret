@@ -53,5 +53,15 @@ class PageSeoSeeder extends Seeder
             'contents' => 'E-Ticaret iletişim contents',
         ]);
 
+        PageSeo::create([
+            'dil' => 'tr',
+            'page' => 'sepet',
+            'page_ust' => '',
+            'title' => 'E-Ticaret sepet',
+            'description' => 'E-Ticaret sepet description',
+            'keywords' => 'E-Ticaret sepet keywords',
+            'contents' => 'E-Ticaret sepet contents',
+        ]);
+
     }
 }

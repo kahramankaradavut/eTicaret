@@ -21,13 +21,13 @@ class Iyzico
     {
         $this->request = new \Iyzipay\Request\CreateCheckoutFormInitializeRequest();
         $this->request->setLocale(\Iyzipay\Model\Locale::TR);
-        $this->request->setConversationId($params['conversationId']);
         $this->request->setPrice($params['price']);
         $this->request->setPaidPrice($params['paidPrice']);
         $this->request->setCurrency(\Iyzipay\Model\Currency::TL);
         $this->request->setBasketId($params['basketId']);
         $this->request->setPaymentGroup(\Iyzipay\Model\PaymentGroup::PRODUCT);
-        $this->request->setCallbackUrl(view('frontend.pages.odemeCallBack'));
+        // $this->request->setCallbackUrl("https://www.merchant.com/callback");
+        $this->request->setCallbackUrl(url(route('call_back')));
         $this->request->setEnabledInstallments([2, 3, 6, 9]);
 
         return $this;
@@ -96,11 +96,10 @@ class Iyzico
         return $form;
     }
 
-    public function callbackForm($token, $conversationId)
+    public function callbackForm($token)
     {
         $request = new \Iyzipay\Request\RetrieveCheckoutFormRequest();
         $request->setLocale(\Iyzipay\Model\Locale::TR);
-        $request->setConversationId($conversationId);
         $request->setToken($token);
         $checkoutForm = \Iyzipay\Model\CheckoutForm::retrieve($request, $this->options);
         return $checkoutForm;

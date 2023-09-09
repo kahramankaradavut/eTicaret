@@ -6,9 +6,9 @@ use App\Models\Order;
 use App\Models\Coupon;
 use App\Models\Invoice;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Libraries\Iyzico;
-
 
 class CartController extends Controller
 {
@@ -230,9 +230,11 @@ class CartController extends Controller
     {
         $request->validate(
             [
+                'identity' => 'required|valid_tc_kimlik',
                 'name' => 'required|string|min:3',
+                'surname' => 'required|string|min:3',
                 'email' => 'required|email',
-                'phone' => 'required|string',
+                'phone' => 'required|valid_phone_number',
                 'company_name' => 'nullable|string',
                 'address' => 'required|string',
                 'country' => 'required|string',
@@ -242,13 +244,18 @@ class CartController extends Controller
                 'note' => 'nullable|string',
             ],
             [
+                'identity.required' => __('TC Kimlik alanı zorunludur.'),
+                'identity.valid_tc_kimlik' => __('TC Kimlik geçersiz!'),
                 'name.required' => __('İsim alanı zorunludur.'),
                 'name.string' => __('İsim bir metin olmalıdır.'),
                 'name.min' => __('İsim en az 3 karakterden oluşmalıdır.'),
+                'surname.required' => __('Soyad alanı zorunludur.'),
+                'surname.string' => __('Soyad bir metin olmalıdır.'),
+                'surname.min' => __('Soyad en az 3 karakterden oluşmalıdır.'),
                 'email.required' => __('E-posta alanı zorunludur.'),
                 'email.email' => __('Geçerli bir e-posta adresi girilmelidir.'),
                 'phone.required' => __('Telefon alanı zorunludur.'),
-                'phone.string' => __('Telefon bir metin olmalıdır.'),
+                'phone.valid_phone_number' => __('Telefon numarasını gösterilen şekilde giriniz.'),
                 'company_name.string' => __('Şirket adı bir metin olmalıdır.'),
                 'address.required' => __('Adres alanı zorunludur.'),
                 'address.string' => __('Adres bir metin olmalıdır.'),
@@ -263,12 +270,13 @@ class CartController extends Controller
                 'note.string' => __('Not bir metin olmalıdır.'),
             ],
         );
-
         $invoce = Invoice::create([
             'user_id' => auth()->user()->id ?? null,
             'order_no' => $this->generateKod(),
             'country' => $request->country,
+            'identity' =>$request->identity,
             'name' => $request->name,
+            'surname' => $request->surname,
             'company_name' => $request->company_name ?? null,
             'address' => $request->address ?? null,
             'city' => $request->city ?? null,
@@ -282,102 +290,111 @@ class CartController extends Controller
         $cart = session()->get('cart') ?? [];
 
         foreach ($cart as $key => $item) {
+            $product = Product::find($key);
+            $category = Category::find($product->category_id);
             Order::create([
                 'order_no' => $invoce->order_no,
                 'product_id' => $key,
                 'name' => $item['name'],
                 'price' => $item['price'],
                 'qty' => $item['qty'],
+                'category_name' => $category->name,
             ]);
         }
 
         session()->forget('cart');
-        return redirect()
-            ->route('anasayfa')
-            ->withSuccess('Alışveriş Başarıyla Tamamlandı.');
+        return redirect()->route('odeme');
     }
 
     public function odeme()
     {
+        $invoice = Invoice::latest()->firstOrFail();
+        $order = Order::latest()->firstOrFail();
+        $orderNo = $order->order_no;
+        $orders = Order::where('order_no', $orderNo)->get();
+
+        $items = [];
+        $totalPrice = 0;
+        foreach ($orders as $order) {
+            $totalPrice = $totalPrice + $order->price;
+        }
+        
+        foreach ($orders as $order) {
+                $items[] = [
+                    'id' => $order->product_id,
+                    'name' => $order->name,
+                    'category' => $order->category_name,
+                    'price' => number_format($order->price, 1),
+                ];
+        }
+
+
         $iyzico = new Iyzico();
         $payment = $iyzico
             ->setForm([
-                'conversationId' => '123456789',
-                'price' => 120.0,
-                'paidPrice' => 126.0,
-                'basketId' => 'SPT1234',
+                'price' => number_format($totalPrice, 1),
+                'paidPrice' => number_format($totalPrice, 1),
+                'basketId' => $invoice->order_no,
             ])
             ->setBuyer([
                 'id' => 120,
-                'name' => 'Kahraman',
-                'surname' => 'Karadavut',
-                'phone' => '05055555555',
-                'email' => 'test@gmail.com',
-                'identity' => '12312312123',
-                'address' => 'Alıcı adresi Kayseri',
+                'name' => $invoice->name,
+                'surname' => $invoice->surname,
+                'phone' => $invoice->phone,
+                'email' => $invoice->email,
+                'identity' => $invoice->identity,
+                'address' => $invoice->address,
                 'ip' => request()->ip(),
-                'city' => 'Kayseri',
+                'city' => $invoice->city,
                 'country' => 'Türkiye',
             ])
             ->setShipping([
-                'name' => 'Kahraman Karadavut',
-                'city' => 'Kayseri',
+                'name' => $invoice->name . ' ' . $invoice->surname,
+                'city' => $invoice->city,
                 'country' => 'Türkiye',
-                'address' => 'Kargonun gideceği adres.',
+                'address' => $invoice->address,
             ])
             ->setBilling([
-                'name' => 'Kahraman Karadavut',
-                'city' => 'Kayseri',
+                'name' => $invoice->name . ' ' . $invoice->surname,
+                'city' => $invoice->city,
                 'country' => 'Türkiye',
-                'address' => 'Faturanın gideceği adres.',
+                'address' => $invoice->address,
             ])
-            ->setItems([
-            [
-                'id' => 8749,
-                'name' => 'Kırmızı Ayakkabı',
-                'category' => 'Ayakkabı',
-                'price' => 40.0,
-            ],
-            [
-                'id' => 8750,
-                'name' => 'Siyah Ayakkabı',
-                'category' => 'Ayakkabı',
-                'price' => 40.0,
-            ],
-            [
-                'id' => 8751,
-                'name' => 'Beyaz Ayakkabı',
-                'category' => 'Ayakkabı',
-                'price' => 40.0,
-            ]
-            ]
-            )
+            ->setItems($items)
             ->paymentForm();
+
 
         $breadcrumb = [
             'sayfalar' => [],
             'active' => 'Ödeme Sayfası',
         ];
-        return view('frontend.pages.odeme', [
-            'paymentContent' => $payment->getCheckoutFormContent(),
-            'paymentStatus' => $payment->getStatus(),
-
-        ],
-         compact('breadcrumb'));
+        return view(
+            'frontend.pages.odeme',
+            [
+                'paymentContent' => $payment->getCheckoutFormContent(),
+                'paymentStatus' => $payment->getStatus(),
+            ],
+            compact('breadcrumb'),
+        );
     }
 
-    public function callback(){
+    public function callback()
+    {
         $token = $_REQUEST['token'];
-        $coversationId = '123456789';
+        $conversationId = '123456789';
         $iyzico = new Iyzico();
         $response = $iyzico->callbackForm($token, $conversationId);
 
         $breadcrumb = [
             'sayfalar' => [],
-            'active' => 'Ödeme Sayfası',
+            'active' => 'Ödeme',
         ];
-        return view('frontend.pages.odemeCallBack', [
-            'paymentStatus' => $response->getPaymentStatus(),
-        ], compact('breadcrumb'));
+        return view(
+            'frontend.pages.callback',
+            [
+                'paymentStatus' => $response->getPaymentStatus(),
+            ],
+            compact('breadcrumb'),
+        );
     }
 }
