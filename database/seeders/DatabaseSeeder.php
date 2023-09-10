@@ -6,6 +6,8 @@ namespace Database\Seeders;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Database\Seeders\PageSeoSeeder;
+use Database\Seeders\UserSeeder;
+
 
 
 class DatabaseSeeder extends Seeder
@@ -29,7 +31,8 @@ class DatabaseSeeder extends Seeder
             AboutSeeder::class,
             SiteSettingSeeder::class,
             ProductSeeder::class,
-            PageSeoSeeder::class
+            PageSeoSeeder::class,
+            UserSeeder::class
         ]);
 
         Product::factory(100)->create();

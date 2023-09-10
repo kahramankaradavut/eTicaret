@@ -30,9 +30,5 @@ class SiteSettingSeeder extends Seeder
         'data'=>'test@domain.com',
        ]);
 
-       SiteSetting::create([
-        'name'=>'harita',
-        'data'=> null,
-       ]);
     }
 }

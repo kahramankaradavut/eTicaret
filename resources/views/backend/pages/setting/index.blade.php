@@ -21,7 +21,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Resim</th>
+                  
                   <th>Key</th>
                   <th>Value</th>
                   <th>Edit</th>
@@ -32,14 +32,10 @@
                     @foreach ($sets as $setting)
                     <tr class="item" item-id="{{ $setting->id }}">
 
-                        <td class="py-1">
-                            @if ($setting->set_type == 'image')
-                                 <img src="{{asset($setting->data)}}" alt="image"/>
-                            @endif
-                        </td>
+                        
                         <td>{{$setting->name}}</td>
                         <td>{{$setting->data ?? ''}}</td>
-                        <td>{{$setting->set_type}}</td>
+                        
                         <td class="d-flex">
                             <a href="{{route('panel.setting.edit',$setting->id)}}" class="btn btn-primary mr-2">Düzenle</a>
 

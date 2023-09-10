@@ -69,7 +69,63 @@ class CartController extends Controller
         return $cartItem;
     }
 
+    public function sepetListadd()
+    {
+        $cartItem = session()->get('cart') ?? [];
+        $totalPrice = 0;
+        foreach ($cartItem as $cart) {
+            $toplamTutar = $cart['price'] * $cart['qty'];
+            $totalPrice += $toplamTutar;
+        }
+        if (session()->get('coupon_code') && $totalPrice != 0) {
+            $kupon = Coupon::where('name', session()->get('coupon_code'))
+                ->where('status', '1')
+                ->first();
+            $kuponrate = $kupon->discount_rate ?? 0;
+            $kuponprice = $kupon->price ?? 0;
+            if ($kuponprice > 0) {
+                $newtotalPrice = $totalPrice - $kuponprice;
+            }
+            if ($kuponrate > 0) {
+                $newtotalPrice = $totalPrice - ($totalPrice * $kuponrate) / 100;
+            }
+        } else {
+            $newtotalPrice = $totalPrice+90;
+        }
+
+        session()->put('total_price', $newtotalPrice);
+
+        if (count($cartItem) == 0) {
+            session()->forget('coupon_code');
+        }
+
+        return $cartItem;
+    }
+
     public function sepetform()
+    {
+        $cartItem = $this->sepetListadd();
+
+        $seolists = metaolustur('sepet');
+
+        $seo = [
+            'title' => $seolists['title'] ?? '',
+            'description' => $seolists['description'] ?? '',
+            'keywords' => $seolists['keywords'] ?? '',
+            'image' => asset('img/page-bg.jpg'),
+            'url' => $seolists['currenturl'],
+            'canonical' => $seolists['trpage'],
+            'robots' => 'noindex, follow',
+        ];
+
+        $breadcrumb = [
+            'sayfalar' => [],
+            'active' => 'Sepet',
+        ];
+
+        return view('frontend.pages.cartform', compact('breadcrumb', 'seo', 'cartItem'));
+    }
+    public function sepetformCredit()
     {
         $cartItem = $this->sepetList();
 
@@ -90,7 +146,7 @@ class CartController extends Controller
             'active' => 'Sepet',
         ];
 
-        return view('frontend.pages.cartform', compact('breadcrumb', 'seo', 'cartItem'));
+        return view('frontend.pages.cartformcredit', compact('breadcrumb', 'seo', 'cartItem'));
     }
 
     public function add(Request $request)
@@ -303,6 +359,88 @@ class CartController extends Controller
         }
 
         session()->forget('cart');
+        return redirect()
+            ->route('anasayfa')
+            ->withSuccess('Alışveriş Başarıyla Tamamlandı.');
+    }
+
+    public function cartSaveWCredit(Request $request)
+    {
+        $request->validate(
+            [
+                'identity' => 'required|valid_tc_kimlik',
+                'name' => 'required|string|min:3',
+                'surname' => 'required|string|min:3',
+                'email' => 'required|email',
+                'phone' => 'required|valid_phone_number',
+                'company_name' => 'nullable|string',
+                'address' => 'required|string',
+                'country' => 'required|string',
+                'city' => 'required|string',
+                'district' => 'required|string',
+                'zip_code' => 'required|string',
+                'note' => 'nullable|string',
+            ],
+            [
+                'identity.required' => __('TC Kimlik alanı zorunludur.'),
+                'identity.valid_tc_kimlik' => __('TC Kimlik geçersiz!'),
+                'name.required' => __('İsim alanı zorunludur.'),
+                'name.string' => __('İsim bir metin olmalıdır.'),
+                'name.min' => __('İsim en az 3 karakterden oluşmalıdır.'),
+                'surname.required' => __('Soyad alanı zorunludur.'),
+                'surname.string' => __('Soyad bir metin olmalıdır.'),
+                'surname.min' => __('Soyad en az 3 karakterden oluşmalıdır.'),
+                'email.required' => __('E-posta alanı zorunludur.'),
+                'email.email' => __('Geçerli bir e-posta adresi girilmelidir.'),
+                'phone.required' => __('Telefon alanı zorunludur.'),
+                'phone.valid_phone_number' => __('Telefon numarasını gösterilen şekilde giriniz.'),
+                'company_name.string' => __('Şirket adı bir metin olmalıdır.'),
+                'address.required' => __('Adres alanı zorunludur.'),
+                'address.string' => __('Adres bir metin olmalıdır.'),
+                'country.required' => __('Ülke alanı zorunludur.'),
+                'country.string' => __('Ülke bir metin olmalıdır.'),
+                'city.required' => __('Şehir alanı zorunludur.'),
+                'city.string' => __('Şehir bir metin olmalıdır.'),
+                'district.required' => __('İlçe alanı zorunludur.'),
+                'district.string' => __('İlçe bir metin olmalıdır.'),
+                'zip_code.required' => __('Posta kodu alanı zorunludur.'),
+                'zip_code.string' => __('Posta kodu bir metin olmalıdır.'),
+                'note.string' => __('Not bir metin olmalıdır.'),
+            ],
+        );
+        $invoce = Invoice::create([
+            'user_id' => auth()->user()->id ?? null,
+            'order_no' => $this->generateKod(),
+            'country' => $request->country,
+            'identity' =>$request->identity,
+            'name' => $request->name,
+            'surname' => $request->surname,
+            'company_name' => $request->company_name ?? null,
+            'address' => $request->address ?? null,
+            'city' => $request->city ?? null,
+            'district' => $request->district ?? null,
+            'zip_code' => $request->zip_code ?? null,
+            'email' => $request->email ?? null,
+            'phone' => $request->phone ?? null,
+            'note' => $request->note ?? null,
+        ]);
+
+        $cart = session()->get('cart') ?? [];
+
+        foreach ($cart as $key => $item) {
+            $product = Product::find($key);
+            $category = Category::find($product->category_id);
+            Order::create([
+                'order_no' => $invoce->order_no,
+                'product_id' => $key,
+                'name' => $item['name'],
+                'price' => $item['price'],
+                'qty' => $item['qty'],
+                'category_name' => $category->name,
+            ]);
+        }
+
+        
         return redirect()->route('odeme');
     }
 
@@ -380,8 +518,9 @@ class CartController extends Controller
 
     public function callback()
     {
+        $invoice = Invoice::latest()->firstOrFail();
         $token = $_REQUEST['token'];
-        $conversationId = '123456789';
+        $conversationId = $invoice->identity;
         $iyzico = new Iyzico();
         $response = $iyzico->callbackForm($token, $conversationId);
 
@@ -389,6 +528,7 @@ class CartController extends Controller
             'sayfalar' => [],
             'active' => 'Ödeme',
         ];
+        session()->forget('cart');
         return view(
             'frontend.pages.callback',
             [

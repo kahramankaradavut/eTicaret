@@ -21,8 +21,6 @@
 
                   <select class="form-control" id="orderList">
                     <option class="dropdown-item" value="">Sıralama Seçiniz</option>
-                    <option class="dropdown-item" value="id-asc">A-Z ye Sırala</option>
-                    <option class="dropdown-item" value="id-desc">Z-A ye Sırala</option>
                     <option class="dropdown-item" value="price-asc">Düşük Fiyata göre sırala</option>
                     <option class="dropdown-item" value="price-desc">Yüksek Fiyata göre sırala</option>
                   </select>
@@ -36,19 +34,7 @@
           </div>
           <div class="row paginateButtons" data-aos="fade-up">
             {{$products->withQueryString()->links('vendor.pagination.custom')}}
-          {{--  <div class="col-md-12 text-center">
-              <div class="site-block-27">
-                <ul>
-                  <li><a href="#">&lt;</a></li>
-                  <li class="active"><span>1</span></li>
-                  <li><a href="#">2</a></li>
-                  <li><a href="#">3</a></li>
-                  <li><a href="#">4</a></li>
-                  <li><a href="#">5</a></li>
-                  <li><a href="#">&gt;</a></li>
-                </ul>
-              </div>
-            </div> --}}
+          
           </div>
         </div>
 
@@ -58,7 +44,7 @@
             <ul class="list-unstyled mb-0">
                 @if (!empty($categories) && $categories->count() > 0)
                 @foreach ($categories->where('cat_ust',null)  as $category)
-                <li class="mb-1"><a href="{{route('urunler', $category->slug)}}" class="d-flex"><span>{{$category->name}}</span> <span class="text-black ml-auto">({{$category->getTotalProductCount()}})</span></a></li>
+                <li class="mb-1"><a href="{{route('urunler', $category->slug)}}" class="d-flex"><span>{{$category->content}}</span> <span class="text-black ml-auto">({{$category->getTotalProductCount()}})</span></a></li>
                 @endforeach
             @endif
             </ul>

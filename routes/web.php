@@ -43,11 +43,13 @@ Route::group(['middleware'=>'sitesetting'], function() {
 
     Route::get('/sepet', [CartController::class,'index'])->name('sepet');
     Route::get('/sepet/form', [CartController::class,'sepetform'])->name('sepet.form');
+    Route::get('/sepet/form/kart', [CartController::class,'sepetformcredit'])->name('sepet.form.credit');
 
     Route::post('/sepet/ekle', [CartController::class,'add'])->name('sepet.add');
     Route::post('/sepet/remove', [CartController::class,'remove'])->name('sepet.remove');
     Route::post('/sepet/couponcheck', [CartController::class,'couponcheck'])->name('coupon.check');
     Route::post('/sepet/newqty', [CartController::class,'newqty'])->name('sepet.newqty');
+    Route::post('/sepet/save-credit', [CartController::class,'cartSaveWCredit'])->name('sepet.cartSaveWCredit');
     Route::post('/sepet/save', [CartController::class,'cartSave'])->name('sepet.cartSave');
     Route::get('/sepet/odeme', [CartController::class, 'odeme'])->name('odeme');
     Route::match(['get','post'], '/sepet/callback', [CartController::class, 'callback'])->name('call_back');

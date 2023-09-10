@@ -21,7 +21,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Resim</th>
+                  
                   <th>Başlık</th>
                   <th>Slogan</th>
                   <th>Link</th>
@@ -33,14 +33,7 @@
                 @if (!empty($sliders) && $sliders->count() > 0)
                     @foreach ($sliders as $slider)
                     <tr class="item" item-id="{{ $slider->id }}">
-                        <td class="py-1">
-
-                          @php
-                          $images = collect($slider->images->data ?? '');
-                          @endphp
-                          <img src="{{asset($images->sortByDesc('vitrin')->first()['image'] ?? 'img/resimyok.png')}}" ></img>
-
-                        </td>
+                        
                         <td>{{$slider->name}}</td>
                         <td>{{$slider->content ?? ''}}</td>
                         <td>{{$slider->link}}</td>
