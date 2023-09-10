@@ -21,7 +21,7 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Resim</th>
+                 
                   <th>Başlık</th>
                   <th>Slogan</th>
                   <th>Link</th>
@@ -33,14 +33,7 @@
                 @if (!empty($pageseos) && $pageseos->count() > 0)
                     @foreach ($pageseos as $pageseo)
                     <tr class="item" item-id="{{ $pageseo->id }}">
-                        <td class="py-1">
-
-                          @php
-                          $images = collect($pageseo->images->data ?? '');
-                          @endphp
-                          <img src="{{asset($images->sortByDesc('vitrin')->first()['image'] ?? 'img/resimyok.png')}}" ></img>
-
-                        </td>
+                        
                         <td>{{$pageseo->dil}}</td>
                         <td>{{$pageseo->page ?? ''}}</td>
                         <td>{{$pageseo->pageinfo->page ?? ''}}</td>

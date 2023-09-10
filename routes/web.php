@@ -54,7 +54,18 @@ Route::group(['middleware'=>'sitesetting'], function() {
     Route::get('/sepet/odeme', [CartController::class, 'odeme'])->name('odeme');
     Route::match(['get','post'], '/sepet/callback', [CartController::class, 'callback'])->name('call_back');
 
-
+    Route::get('/register', function () {
+        return redirect('/');
+    });
+    Route::get('/password/confirm', function () {
+        return redirect('/');
+    });
+    Route::get('/password/email', function () {
+        return redirect('/');
+    });
+    Route::get('/password/reset', function () {
+        return redirect('/');
+    });
 
     Auth::routes();
 

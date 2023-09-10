@@ -21,7 +21,6 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th>Resim</th>
                   <th>Başlık</th>
                   <th>Slogan</th>
                   <th>Status</th>
@@ -32,14 +31,6 @@
                 @if (!empty($categories) && $categories->count() > 0)
                     @foreach ($categories as $category)
                     <tr class="item" item-id="{{ $category->id }}">
-                        <td class="py-1">
-
-                            @php
-                            $images = collect($category->images->data ?? '');
-                            @endphp
-                            <img src="{{asset($images->sortByDesc('vitrin')->first()['image'] ?? 'img/resimyok.png')}}" ></img>
-
-                        </td>
                         <td>{{$category->name}}</td>
                         <td>{{$category->content ?? ''}}</td>
                         <td>
