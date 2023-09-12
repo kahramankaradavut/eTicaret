@@ -28,13 +28,18 @@
           </div>
         </div>
       </div>
+      
       <div class="row pt-5 mt-5 text-center">
         <div class="col-md-12">
+          
+            
+          
           <p>
-          Copyright &copy; {{date('Y')}} Tüm haklar saklıdır.
+            Copyright &copy; <?php echo date('Y'); ?> Tüm haklar saklıdır. <a href="https://www.instagram.com/pirisoftt/">Made by PiriSoft.</a>
           </p>
+          <img src="{{ asset('images/logo_band_colored@1X.png') }}" alt="İyzico">
         </div>
-
       </div>
+      
     </div>
   </footer>
