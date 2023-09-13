@@ -26,11 +26,11 @@
           <h2 class="text-black">{{$product->name ?? ''}}</h2>
           {!! $product->content ?? '' !!}
 
-          <p><strong class="text-primary h4">{{number_format($product->price,2)}}</strong></p>
+          <p><strong class="text-primary h4">{{number_format($product->price,2)}} ₺</strong></p>
           <form action="{{route('sepet.add')}}" method="POST">
             @csrf
             <input type="hidden" name="product_id" value="{{$product->id}}">
-          <div class="mb-1 d-flex">
+          {{-- <div class="mb-1 d-flex">
             <label for="option-xs" class="d-flex mr-3 mb-3">
                 <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-xs" name="size" {{$product->size == 'XS' ? 'checked' : ''}} value="XS"></span> <span class="d-inline-block text-black">XS</span>
               </label>
@@ -47,7 +47,8 @@
             <label for="option-xxl" class="d-flex mr-3 mb-3">
               <span class="d-inline-block mr-2" style="top:-2px; position: relative;"><input type="radio" id="option-xxl" name="size" {{$product->size == 'XXL' ? 'checked' : ''}}  value="XXL"></span> <span class="d-inline-block text-black">XXL</span>
             </label>
-          </div>
+          </div> --}}
+          @dd($product)
           <div class="mb-5">
             <div class="input-group mb-3" style="max-width: 120px;">
             <div class="input-group-prepend">
