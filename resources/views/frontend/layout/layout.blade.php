@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
-    <title>{{ $seo['title'] ?? config('app.name') }}</title>
+    <title>{{config('app.name')}}</title>
 
     <!--meta-->
     <meta name="description" content="{{$seo['description'] ?? '' }}">
