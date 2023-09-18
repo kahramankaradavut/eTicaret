@@ -90,7 +90,7 @@ class CartController extends Controller
                 $newtotalPrice = $totalPrice - ($totalPrice * $kuponrate) / 100;
             }
         } else {
-            $newtotalPrice = $totalPrice+90;
+            $newtotalPrice = $totalPrice+110;
         }
 
         session()->put('total_price', $newtotalPrice);

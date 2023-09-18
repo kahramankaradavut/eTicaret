@@ -67,7 +67,7 @@
           <div class="col-md-12">
             <div class="nonloop-block-3 owl-carousel">
 
-                @if (!empty($lastproducts) && $lastproducts->count() > 0)
+                @if (!empty($lastlgs) && $lastproducts->count() > 0)
                     @foreach ($lastproducts as $item)
                     <div class="item">
                         <div class="block-4 text-center">
