@@ -10,7 +10,7 @@
                 <div class="col-md-6 col-lg-8 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="">
                     <div class="text" style="width: 800px">
                         <?php if($paymentStatus == 'SUCCESS'){ ?>
-                        <h1>Ödeme Başarılı! Yılmaz Karadavut</h1>
+                        <h1>Ödeme Başarılı!</h1>
                         <?php }else{ ?>
                         <h1>Bir Hata Oluştu!</h1>
                         <?php } ?>
